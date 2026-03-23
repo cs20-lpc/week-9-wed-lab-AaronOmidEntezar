@@ -1,6 +1,14 @@
 template <typename T>
 ArrayQueue<T>::ArrayQueue(int i) {
-    // TODO
+    if (i <= 0) {
+        throw string("invalid queue size");
+    }
+
+    maxSize = i;
+    buffer = new T[maxSize];
+    this->length = 0;
+    frontIndex = 0;
+    backIndex = -1;
 }
 
 template <typename T>
@@ -24,32 +32,72 @@ ArrayQueue<T>::~ArrayQueue() {
 
 template <typename T>
 T ArrayQueue<T>::back() const {
-    // TODO
+    if (isEmpty()) {
+        throw string("queue is empty");
+    }
+    return buffer[backIndex];
 }
 
 template <typename T>
 void ArrayQueue<T>::clear() {
-    // TODO
+    delete[] buffer;
+    buffer = nullptr;
+    this->length = 0;
+    maxSize = 0;
+    frontIndex = 0;
+    backIndex = -1;
 }
 
 template <typename T>
 void ArrayQueue<T>::copy(const ArrayQueue<T>& copyObj) {
-    // TODO
+    maxSize = copyObj.maxSize;
+    this->length = copyObj.length;
+    frontIndex = copyObj.frontIndex;
+    backIndex = copyObj.backIndex;
+
+    buffer = new T[maxSize];
+
+    for (int i = 0; i < maxSize; i++) {
+        buffer[i] = copyObj.buffer[i];
+    }
 }
 
 template <typename T>
 void ArrayQueue<T>::dequeue() {
-    // TODO
+    if (isEmpty()) {
+        throw string("queue is empty");
+    }
+
+    frontIndex = (frontIndex + 1) % maxSize;
+    this->length--;
+
+    if (this->length == 0) {
+        frontIndex = 0;
+        backIndex = -1;
+    }
 }
 
 template <typename T>
 void ArrayQueue<T>::enqueue(const T& elem) {
-    // TODO
+    if (isFull()) {
+        throw string("queue is full");
+    }
+
+    backIndex = (backIndex + 1) % maxSize;
+    buffer[backIndex] = elem;
+    this->length++;
+
+    if (this->length == 1) {
+        frontIndex = backIndex;
+    }
 }
 
 template <typename T>
 T ArrayQueue<T>::front() const {
-    // TODO
+    if (isEmpty()) {
+        throw string("queue is empty");
+    }
+    return buffer[frontIndex];
 }
 
 template <typename T>
